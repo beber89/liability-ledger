@@ -1,5 +1,5 @@
-var Ballot = artifacts.require("Ballot");
+var Liability = artifacts.require("Liability");
 
 module.exports = function(deployer) {
-  deployer.deploy(Ballot);
+  deployer.deploy(Liability);
 };
