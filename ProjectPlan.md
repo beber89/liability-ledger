@@ -1,3 +1,4 @@
+# NOTE: NOT WORKING BECAUSE COULD NOT USE WEB3 WITH FLUTTER DART
 # Phase A: Implemnt workers Part without assets with flutter frontend
 ## Phase A.1:
 - Write tests for register(), requestSwitchDept() & agreeToRequest()
