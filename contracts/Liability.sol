@@ -61,4 +61,10 @@ contract Liability {
         requests[requester] = Request(address(0), 0);
       }
     }
+
+  // events
+  event NewWorker(uint role, address boss);
+  function getWorker(address add) public{
+    emit NewWorker(workers[add].role, workers[add].boss);
+  }
 }
