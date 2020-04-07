@@ -11,3 +11,4 @@
 ## Phase A.5:
 - Connect flutter frontend to the smart contract methods and run.
 # Phase B: Implement Asset sharing part
+## Phase B.1: Creae a deployer frontend app that only runs once in order to deploy contract

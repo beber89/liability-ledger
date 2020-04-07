@@ -1,6 +1,7 @@
 import React from 'react'
-import { Icon, Menu, Segment, Sidebar } from 'semantic-ui-react'
+import { Icon, Menu, Segment, Sidebar, Button } from 'semantic-ui-react'
 import {Link} from 'react-router-dom';
+import deployer from '../utils/deployer';
 
 
 
@@ -33,9 +34,9 @@ const SidebarExampleVisible = (props) => (
         <Icon name='file alternate' />
         Resources
       </Menu.Item>
-      <Menu.Item  style={{"margin":"5em 0"}} >
-        <Icon name='plus' />
-        Add
+      <Menu.Item  style={{"margin":"5em 0"}}  onClick={deployer}>
+        <Icon name='chevron circle right' />
+        Deploy
       </Menu.Item>
     </Sidebar>
 
