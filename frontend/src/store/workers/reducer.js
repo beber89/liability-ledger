@@ -22,7 +22,7 @@ const workerAddedSuccess = (state, action) => {
     loading: false
   });
 };
-const reducer = (state = initialState, action) => {
+const reducer = (state = initialState, action, stateAuth) => {
   switch (action.type) {
     case ADD_WORKER:
       return addWorkerStart(state, action);
@@ -31,6 +31,10 @@ const reducer = (state = initialState, action) => {
     default:
       return state;
   }
+};
+
+const addWorkerLogic =  () => {
+
 };
 
 export default reducer;

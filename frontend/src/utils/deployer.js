@@ -1,15 +1,13 @@
 import Web3 from 'web3';
 import {data} from './bytecode.json';
 
-const  deployer = () => {
+const  deployer = (publicKey, privateKey) => {
 
   const Tx = require('ethereumjs-tx').Transaction;
   // const web3 = new Web3(rpcURL, null, { 'transactionConfirmationBlocks': 1 /* This is a critical part ((Dev only)) */ });
   const web3 = new Web3("http://127.0.0.1:8545", null, { transactionConfirmationBlocks: 1 });
-  const account0 = "0xA3E96050360ff34b6F7CD8e1994534a528B34850"
-  const privateKey0 = "d920f1acf69d9927b554490b6a3b5819b76fea179f00b9c74dd3fc837806b7d1";
 
-  web3.eth.getTransactionCount(account0, (err, txCount) => {
+  web3.eth.getTransactionCount(publicKey, (err, txCount) => {
     console.log("transactions executed by account", txCount);
     const txObject = {
       nonce:    web3.utils.toHex(txCount),
@@ -19,7 +17,7 @@ const  deployer = () => {
     }
   
     const tx = new Tx(txObject)
-    tx.sign(Buffer.from(privateKey0, 'hex'));
+    tx.sign(Buffer.from(privateKey, 'hex'));
   
     const serializedTx = tx.serialize()
     const raw = '0x' + serializedTx.toString('hex')
