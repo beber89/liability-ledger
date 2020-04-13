@@ -3,8 +3,7 @@ import SidebarExampleVisible from '../components/SideBarExampleVisible';
 import { Item, Label, Button, Icon, Input } from 'semantic-ui-react';
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { addWorker } from "../store/workers";
-import Txion from '../utils/tx-utils';
+import { addWorker, getWorkers } from "../store/workers";
 
 
 
@@ -13,7 +12,6 @@ import Txion from '../utils/tx-utils';
 class WorkerspageLayout extends React.Component {
 
   init = (address) => {
-
     // console.log(this.props.publicKey);
     
     // TODO: validate address is proper format
@@ -27,6 +25,17 @@ class WorkerspageLayout extends React.Component {
     });
   }
 
+  showWorkers = () => {
+    console.log("contract is ")
+    console.log(this.props.contract);
+    this.props.getWorkers({
+    publicKey: this.props.publicKey,
+    privateKey: this.props.privateKey,
+    contract: this.props.contract,
+    contractAddress: this.props.contractAddress,
+  });
+};
+
 
 
   render() {
@@ -37,6 +46,9 @@ class WorkerspageLayout extends React.Component {
       <Icon name="users"/>
       <Button type='submit' onClick={()=>this.init(address)}>
         <Icon name="plus"/>
+      </Button>
+      <Button  onClick={()=>this.showWorkers()}>
+        <Icon name="users"/>
       </Button>
     </Input>
   <Item.Group divided>
@@ -104,13 +116,16 @@ const mapStateToProps = state => {
     error: state.workers.error,
     data: state.workers.data,
     publicKey: state.auth.data.publicKey,
-    privateKey: state.auth.data.privateKey
+    privateKey: state.auth.data.privateKey,
+    contract: state.auth.data.contract,
+    contractAddress: state.auth.data.contractAddress
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     addWorker: ({publicKey, privateKey, workerId})=>dispatch(addWorker({publicKey, privateKey, workerId})),
+    getWorkers: ({publicKey, privateKey, contract, contractAddress}) => dispatch(getWorkers({publicKey, privateKey, contract, contractAddress})),
   };
 };
 

@@ -1,5 +1,5 @@
 import Web3 from 'web3';
-import {data} from './bytecode.json';
+import {object as data} from './bytecode.json';
 
 const  deployer = (publicKey, privateKey) => {
 
@@ -29,7 +29,7 @@ const  deployer = (publicKey, privateKey) => {
       // TODO: Address needs to be retrieved programmatically
       // Use this txHash to find the contract on Etherscan!
     }
-    ).then((receipt) => console.log(receipt));
+    ).then((receipt) => localStorage.setItem("contractAddress", receipt.contractAddress) );
   });
 
 

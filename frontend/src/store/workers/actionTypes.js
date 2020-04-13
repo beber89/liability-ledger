@@ -1,3 +1,4 @@
 export const ADD_WORKER = "ADD_WORKER";
-export const WORKER_ADDED = "WORKER_ADDED";
+export const GET_WORKERS = "GET_WORKERS";
+
 

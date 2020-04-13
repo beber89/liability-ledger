@@ -1,2 +1,2 @@
 export { default as authReducer } from './reducer';
-export { setKeys } from './action';
+export { setKeys, authCheckState, authCheckContractAddress, loadContract } from './action';

@@ -37,8 +37,8 @@ export default class Txion {
             const raw = '0x' + serializedTx.toString('hex');
             this.web3.eth.sendSignedTransaction(raw, (err, txHash) => {
               if(err) reject(err);
-              else resolve(txHash);
-            });
+              // else resolve(txHash);
+            }).then((receipt) => resolve(receipt));
           }
         });
     });
