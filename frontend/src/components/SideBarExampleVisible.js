@@ -17,13 +17,14 @@ class SidebarExampleVisible extends React.Component {
   }
   handleSubmit = (public_key, private_key) => {
     //TODO: Redux auth values for public_key and private_key
+    public_key = public_key.slice(0,2) === "0x"? public_key.slice(2):public_key;
+    private_key = private_key.slice(0,2) === "0x"? private_key.slice(2):private_key
     this.props.setKeys({publicKey: public_key, privateKey: private_key});
     this.setState({open:false});
   };
   render() {
     var public_key="";
     var private_key="";
-    console.log(this.props.publicKey);
 
     return (
       <Sidebar.Pushable as={Segment}>

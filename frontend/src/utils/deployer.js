@@ -29,7 +29,10 @@ const  deployer = (publicKey, privateKey) => {
       // TODO: Address needs to be retrieved programmatically
       // Use this txHash to find the contract on Etherscan!
     }
-    ).then((receipt) => localStorage.setItem("contractAddress", receipt.contractAddress) );
+    ).then((receipt) => {
+      localStorage.setItem("contractAddress", receipt.contractAddress);
+      window.location.reload(false);
+    } );
   });
 
 

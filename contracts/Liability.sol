@@ -2,9 +2,11 @@ pragma solidity >=0.4.21 <0.7.0;
 
 contract Liability {
 
+  enum Role { Manager, Head, Member }
+
     struct Worker {
       bool init;
-        uint role; // 1: manager, 2: dept head, 3: member
+        Role role; // 1: manager, 2: dept head, 3: member
         address id;
         address boss;
     }
@@ -24,7 +26,7 @@ contract Liability {
     constructor () public {
       manager = msg.sender;
       workers[manager].init = true;
-      workers[manager].role = 1;
+      workers[manager].role = Role.Manager;
       workers[manager].id = manager;
       workers[manager].boss = address(0);
       workersList.push(msg.sender);
@@ -35,24 +37,24 @@ contract Liability {
 
     function register(address toWorker) public{
       if (workers[toWorker].init ) revert ("Worker already initialized");
-      if(workers[msg.sender].role == 3) revert ("Only Manager or Department head can register a user");
+      if(workers[msg.sender].role == Role.Member) revert ("Only Manager or Department head can register a user");
       workers[toWorker].init = true;
       workers[toWorker].boss = msg.sender;
       workers[toWorker].id = toWorker;
       if(msg.sender == manager) {
-        workers[toWorker].role = 2;
+        workers[toWorker].role = Role.Head;
       } else {
         // case : sender is department head
-        workers[toWorker].role = 3;
+        workers[toWorker].role = Role.Member;
       }
       workersList.push(toWorker);
     }
 
     function requestSwitchDept(address toHead) public {
-      if(workers[msg.sender].role == 0) revert("This account is not a worker's account");
-      if(workers[msg.sender].role != 3) revert("Must be a member role");
+      if(workers[msg.sender].role == Role.Manager) revert("This account is not a worker's account");
+      if(workers[msg.sender].role != Role.Member) revert("Must be a member role");
       if(workers[msg.sender].boss == toHead)  revert("You can not request switching to the same department");
-      if(workers[toHead].role != 2) revert("Member allowed to switch to a new Head only");
+      if(workers[toHead].role != Role.Head) revert("Member allowed to switch to a new Head only");
       requests[msg.sender].agrees = 1;   // Worker initiated a request
       requests[msg.sender].toHead = toHead;
     }
@@ -68,17 +70,7 @@ contract Liability {
       }
     }
 
-    // function toBytes(address a) public pure returns (bytes memory b){
-    //     assembly {
-    //         let m := mload(0x40)
-    //         a := and(a, 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF)
-    //         mstore(add(m, 20), xor(0x140000000000000000000000000000000000000000, a))
-    //         mstore(0x40, add(m, 52))
-    //         b := m
-    //   }
-    // }
-
-  function addressToString(address _addr) public pure returns(string memory) {
+  function addressToString(address _addr) private pure returns(string memory) {
       bytes32 value = bytes32(uint256(_addr));
       bytes memory alphabet = "0123456789abcdef";
 
@@ -92,17 +84,33 @@ contract Liability {
       return string(str);
   }
 
+  function concat(string memory _s1, string memory _s2) private pure returns(string memory) {
+    return string(abi.encodePacked(bytes(_s1), bytes(_s2)));
+  }
+
+  function role2string(Role role) private pure returns (string memory roleStr) {
+    if(role == Role.Manager) {
+      roleStr = "Manager";
+    } else if (role == Role.Head) {
+      roleStr = "Head";
+    } else {
+      roleStr = "Member";
+    }
+  }
+  
+
   // events
-  event NewWorker(uint role, address boss);
   event Workers(string list);
-  function getWorker(address add) public{
-    emit NewWorker(workers[add].role, workers[add].boss);
-  }
   function getWorkers() public   {
-    emit Workers(addressToString(workersList[0]));
-    // return toBytes(workersList[0]);
+    string memory str = "";
+    for (uint i = 0; i < workersList.length; i++) {
+      str = concat(str, "address:");
+      str = concat(str, addressToString(workersList[i]));
+      str = concat(str, ";");
+      str = concat(str, "role:");
+      str = concat(str, role2string(workers[workersList[i]].role));
+      str = concat(str, "\n");
+    }
+    emit Workers(str);
   }
-  // function getWorkers() public  {
-  //     emit Workers(workersList);
-  // }
 }

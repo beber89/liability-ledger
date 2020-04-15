@@ -12,27 +12,18 @@ import { addWorker, getWorkers } from "../store/workers";
 class WorkerspageLayout extends React.Component {
 
   init = (address) => {
-    // console.log(this.props.publicKey);
     
     // TODO: validate address is proper format
     // TODO: catch errors: 
-    //// invalid address (arg="toWorker", coderType="address", value="0x0x3a71227d135eb0d94541ac546d249ec3c5efc152", version=4.0.46)
-    // console.log(address);
     this.props.addWorker({
-      publicKey: this.props.publicKey,
-      privateKey: this.props.privateKey,
-      workerId: "0x"+address,
+      wallet: this.props.wallet,
+      workerId: address.slice(0,2) === "0x"? address:"0x"+address,
     });
   }
 
   showWorkers = () => {
-    console.log("contract is ")
-    console.log(this.props.contract);
     this.props.getWorkers({
-    publicKey: this.props.publicKey,
-    privateKey: this.props.privateKey,
-    contract: this.props.contract,
-    contractAddress: this.props.contractAddress,
+      wallet: this.props.wallet
   });
 };
 
@@ -40,6 +31,7 @@ class WorkerspageLayout extends React.Component {
 
   render() {
   var address = '';
+  console.log(this.props.data);
   return (<SidebarExampleVisible>
     <Input iconPosition='left' placeholder='address' action onChange={(_, widget) => address = widget.value}>
       <input/>
@@ -52,6 +44,26 @@ class WorkerspageLayout extends React.Component {
       </Button>
     </Input>
   <Item.Group divided>
+    {
+      this.props.data.map((value, index) => 
+        (
+          <Item>
+          <Item.Image src='https://react.semantic-ui.com/images/wireframe/image.png' />
+    
+          <Item.Content>
+            <Item.Header as='a'>Ali Fahmy</Item.Header>
+            <Item.Meta>
+              <span className='cinema'>{value.role}</span>
+            </Item.Meta>
+            <Item.Description>Description</Item.Description>
+            <Item.Extra>
+              <Label icon='globe'>{value.address}</Label>
+            </Item.Extra>
+          </Item.Content>
+        </Item>
+        )
+      )
+    }
     <Item>
       <Item.Image src='https://react.semantic-ui.com/images/wireframe/image.png' />
 
@@ -115,17 +127,14 @@ const mapStateToProps = state => {
     loading: state.workers.loading ,
     error: state.workers.error,
     data: state.workers.data,
-    publicKey: state.auth.data.publicKey,
-    privateKey: state.auth.data.privateKey,
-    contract: state.auth.data.contract,
-    contractAddress: state.auth.data.contractAddress
+    wallet: state.auth.data,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    addWorker: ({publicKey, privateKey, workerId})=>dispatch(addWorker({publicKey, privateKey, workerId})),
-    getWorkers: ({publicKey, privateKey, contract, contractAddress}) => dispatch(getWorkers({publicKey, privateKey, contract, contractAddress})),
+    addWorker: ({wallet, workerId})=>dispatch(addWorker({wallet, workerId})),
+    getWorkers: ({wallet}) => dispatch(getWorkers({wallet})),
   };
 };
 

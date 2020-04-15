@@ -4,6 +4,8 @@ import { BrowserRouter as Router } from "react-router-dom";
 import BaseRouter from "./routes";
 import "semantic-ui-css/semantic.min.css";
 import {authCheckState, loadContract} from "./store/auth";
+import {handleEvent, handleError} from "./store/workers";
+
 
 import { connect } from "react-redux";
 
@@ -13,7 +15,7 @@ import { connect } from "react-redux";
 class App extends Component {
   componentDidMount() {
     this.props.checkAuth();
-    this.props.loadContract();
+    this.props.loadContract(this.props.handleEvent(), this.props.handleError());
   }
   render() {
     return (
@@ -28,7 +30,9 @@ class App extends Component {
 const mapDispatchToProps = dispatch => {
   return {
     checkAuth: () => dispatch(authCheckState()),
-    loadContract: () => dispatch(loadContract())
+    loadContract: (eventHandler, errorHandler) => dispatch(loadContract(eventHandler, errorHandler)),
+    handleEvent: () => dispatch(handleEvent()),
+    handleError: () => dispatch(handleError())
   };
 };
 

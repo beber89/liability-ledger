@@ -1,6 +1,7 @@
 import { updateObject } from "../utility";
 import { ADD_WORKER, 
-  WORKER_ADDED
+  WORKER_ADDED,
+  FINISH_GET_WORKERS,
  } from "./actionTypes";
 
 const initialState = {
@@ -28,6 +29,8 @@ const reducer = (state = initialState, action, stateAuth) => {
       return addWorkerStart(state, action);
     case WORKER_ADDED:
       return workerAddedSuccess(state, action);
+    case FINISH_GET_WORKERS:
+      return updateObject(state, { data: action.data});
     default:
       return state;
   }
