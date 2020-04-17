@@ -4,6 +4,11 @@ contract Liability {
 
   enum Role { Manager, Head, Member }
 
+  struct Book {
+    string title;
+    address holder;
+  }
+
     struct Worker {
       bool init;
         Role role; // 1: manager, 2: dept head, 3: member
@@ -11,15 +16,16 @@ contract Liability {
         address boss;
     }
     struct Request {
-      address toHead;
-      uint agrees;
+      address member;
+      bool flag;
     }
 
     //modifer
 
     address public manager;
+    mapping(uint => Book) public books;
     mapping(address => Worker) public workers;
-    mapping(address => Request) public requests;
+    mapping(uint => Request) public requests;
     address[] public workersList;
 
     // Create a new ballot with 4 different proposals.
@@ -50,25 +56,35 @@ contract Liability {
       workersList.push(toWorker);
     }
 
-    function requestSwitchDept(address toHead) public {
-      if(workers[msg.sender].role == Role.Manager) revert("This account is not a worker's account");
-      if(workers[msg.sender].role != Role.Member) revert("Must be a member role");
-      if(workers[msg.sender].boss == toHead)  revert("You can not request switching to the same department");
-      if(workers[toHead].role != Role.Head) revert("Member allowed to switch to a new Head only");
-      requests[msg.sender].agrees = 1;   // Worker initiated a request
-      requests[msg.sender].toHead = toHead;
+    function addBook(uint id, string memory title) public  {
+      Book memory b = Book(title, address(0));
+      books[id] = b;
     }
-    function agreeToRequest(address requester) public {
-      if(requests[requester].toHead != msg.sender && workers[requester].boss != msg.sender) {
-        revert("Only current head or new head are allowed to agree on this request");
-      }
-      requests[requester].agrees += 1;
-      if (requests[requester].agrees == 3) {
-        workers[requester].boss = requests[requester].toHead;
-        // Removing request
-        requests[requester] = Request(address(0), 0);
-      }
+
+    function request(uint id) public {
+      requests[id].member = msg.sender;
+      requests[id].flag = true;
     }
+
+    // function requestSwitchDept(address toHead) public {
+    //   if(workers[msg.sender].role == Role.Manager) revert("This account is not a worker's account");
+    //   if(workers[msg.sender].role != Role.Member) revert("Must be a member role");
+    //   if(workers[msg.sender].boss == toHead)  revert("You can not request switching to the same department");
+    //   if(workers[toHead].role != Role.Head) revert("Member allowed to switch to a new Head only");
+    //   requests[msg.sender].agrees = 1;   // Worker initiated a request
+    //   requests[msg.sender].toHead = toHead;
+    // }
+    // function agreeToRequest(address requester) public {
+    //   if(requests[requester].toHead != msg.sender && workers[requester].boss != msg.sender) {
+    //     revert("Only current head or new head are allowed to agree on this request");
+    //   }
+    //   requests[requester].agrees += 1;
+    //   if (requests[requester].agrees == 3) {
+    //     workers[requester].boss = requests[requester].toHead;
+    //     // Removing request
+    //     requests[requester] = Request(address(0), 0);
+    //   }
+    // }
 
   function addressToString(address _addr) private pure returns(string memory) {
       bytes32 value = bytes32(uint256(_addr));

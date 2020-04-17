@@ -12,3 +12,12 @@
 - Connect flutter frontend to the smart contract methods and run.
 # Phase B: Implement Asset sharing part
 ## Phase B.1: Creae a deployer frontend app that only runs once in order to deploy contract
+
+
+# Switch plan: Book Library Ledger
+## Library Manager can employ Librarians
+## Librarians can register members, becoming his/her registrar
+## Librarians can add books to the collection
+## Librarians lend books to members
+## members can lend their books to other members
+## Transactions as struct
